@@ -1,18 +1,561 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Flames App</title>
-    <link rel="icon" type="image/x-icon" href="favicon.svg">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-sans/style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-mono/style.css">
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Built Advertising LLC — Turning Clicks into Closings</title>
+  <meta name="description" content="Built Advertising LLC helps real estate agents generate more leads and book more appointments with Meta ads and AI-powered follow-up systems." />
+  <meta property="og:title" content="Built Advertising LLC — Turning Clicks into Closings" />
+  <meta property="og:description" content="Real estate lead generation with AI follow-up that books appointments while you sleep." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0A63FF" />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Spline Web Component for hero animation (vanilla, lightweight) -->
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.30/build/spline-viewer.js"></script>
+
+  <style>
+    :root {
+      --blue: #0A63FF;          /* Primary */
+      --blue-600: #084ED1;      /* Secondary darker */
+      --blue-300: #66A3FF;      /* Accent light */
+      --accent: #1E90FF;        /* CTA accent */
+      --text: #1F2937;          /* Charcoal */
+      --muted: #6B7280;         /* Gray text */
+      --bg: #FFFFFF;            /* White */
+      --bg-soft: #F7F9FC;       /* Light gray section */
+      --maxw: 1200px;
+      --radius: 14px;
+      --shadow: 0 10px 30px rgba(10, 99, 255, 0.08);
+      --focus: 0 0 0 3px rgba(10, 99, 255, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: var(--maxw); margin: 0 auto; padding: 0 20px; }
+
+    /* Header / Nav */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: saturate(1.2) blur(8px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 14px 0;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo {
+      width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, #1a73e8, #0A63FF);
+      display: grid; place-items: center; color: #fff; font-weight: 800; letter-spacing: -0.5px;
+    }
+    .brand-text { display: grid; }
+    .brand-name { font-weight: 700; letter-spacing: -0.2px; }
+    .brand-tag { font-size: 12px; color: var(--muted); margin-top: -2px; }
+
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { color: #111827; font-weight: 500; opacity: 0.9; }
+    .nav-links a:hover { color: var(--blue); }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      border-radius: 999px; padding: 14px 20px; font-weight: 600; cursor: pointer;
+      transition: transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+      min-height: 48px; border: 1px solid transparent;
+    }
+    .btn:focus-visible { outline: none; box-shadow: var(--focus); }
+    .btn-primary { background: var(--blue); color: #fff; box-shadow: var(--shadow); }
+    .btn-primary:hover { background: var(--blue-600); transform: translateY(-1px); }
+    .btn-secondary { background: #fff; color: var(--blue); border-color: var(--blue); }
+    .btn-secondary:hover { background: rgba(10,99,255,0.06); }
+
+    /* Mobile menu */
+    .hamburger { display: none; background: transparent; border: none; font-size: 0; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: #111827; margin: 5px 0; transition: 0.2s; }
+    .mobile-menu { display: none; flex-direction: column; gap: 12px; padding: 12px 0 18px; }
+    .mobile-menu a { padding: 10px 0; }
+
+    /* Sections */
+    section { padding: 80px 0; }
+    .section-soft { background: var(--bg-soft); }
+    .section-dark { background: linear-gradient(180deg, #0b1220, #0f172a); color: #e5e7eb; }
+
+    h1 { font-size: clamp(32px, 5vw, 48px); line-height: 1.1; margin: 0 0 18px; letter-spacing: -0.02em; }
+    h2 { font-size: clamp(26px, 3.6vw, 36px); line-height: 1.15; margin: 0 0 14px; letter-spacing: -0.01em; }
+    h3 { font-size: 18px; margin: 0 0 10px; }
+    p { margin: 0 0 12px; color: var(--text); }
+
+    /* Hero */
+    .hero {
+      position: relative; padding: 60px 0 40px;
+      display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center;
+    }
+    .hero h1 { color: #0f172a; }
+    .hero p.lead { font-size: clamp(16px, 2.1vw, 20px); color: #475569; }
+    .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+
+    .hero-art {
+      position: relative; height: 520px; border-radius: 22px; overflow: hidden;
+      box-shadow: 0 20px 50px rgba(2,6,23,0.15);
+      background: radial-gradient(1200px 600px at 60% 40%, rgba(10,99,255,0.14), transparent 60%), linear-gradient(180deg, #0b1220, #0f172a);
+    }
+    .hero-art spline-viewer { width: 100%; height: 100%; display: block; }
+    .hero-art .gradient-overlay {
+      position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(800px 400px at 70% 50%, rgba(10,99,255,0.2), transparent 60%);
+    }
+
+    /* Cards, grids */
+    .grid { display: grid; gap: 24px; }
+    .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    @media (max-width: 1024px) { .grid.cols-3 { grid-template-columns: 1fr 1fr; } .grid.cols-4 { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 720px) { .grid.cols-3, .grid.cols-4 { grid-template-columns: 1fr; } }
+
+    .card {
+      background: #fff; border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius);
+      padding: 22px; box-shadow: var(--shadow);
+    }
+    .card:hover { transform: translateY(-2px); transition: transform .2s ease; }
+
+    .icon {
+      width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center;
+      color: #fff; background: linear-gradient(135deg, var(--blue), var(--blue-600));
+      box-shadow: 0 8px 20px rgba(10,99,255,0.18);
+    }
+
+    /* Plan steps */
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; align-items: stretch; }
+    @media (max-width: 900px) { .steps { grid-template-columns: 1fr; } }
+    .step { position: relative; background: #fff; border: 1px solid rgba(0,0,0,0.06); border-radius: 18px; padding: 22px; box-shadow: var(--shadow); overflow: hidden; }
+    .step h3 { margin-top: 10px; }
+    .flow-arrow { display: none; }
+    @media (min-width: 901px) {
+      .flow-arrow { display: block; position: absolute; top: 50%; right: -12px; transform: translateY(-50%); opacity: .35; }
+    }
+
+    /* Lightweight animations */
+    .pulse { animation: pulse 2.2s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+
+    .bubble-seq { position: relative; height: 68px; margin: 8px 0 0; }
+    .bubble { position: absolute; background: #EEF4FF; color: #0b1220; border-radius: 16px; padding: 8px 12px; font-size: 14px; opacity: 0; transform: translateY(6px); }
+    .bubble.ai { background: #0A63FF; color: #fff; }
+    .bubble.show { animation: rise .8s ease forwards; }
+    @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+
+    .calendar-anim { position: relative; height: 90px; margin-top: 8px; }
+    .calendar-box { width: 100%; height: 64px; border-radius: 12px; border: 1px dashed rgba(0,0,0,0.15); display: grid; place-items: center; color: var(--muted); }
+    .tick { position: absolute; right: 10px; bottom: 8px; width: 28px; height: 28px; border-radius: 50%; background: var(--blue); color: #fff; display: grid; place-items: center; box-shadow: var(--shadow); opacity: 0; transform: scale(0.8); }
+    .tick.show { animation: pop .35s ease forwards; }
+    @keyframes pop { to { opacity: 1; transform: scale(1); } }
+
+    /* Pricing */
+    .pricing { display: grid; gap: 24px; grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 980px) { .pricing { grid-template-columns: 1fr; } }
+    .price-card { border-radius: 18px; border: 1px solid rgba(0,0,0,0.06); background: #fff; padding: 26px; box-shadow: var(--shadow); position: relative; }
+    .badge { position: absolute; top: -12px; right: 18px; background: #16a34a; color: #fff; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .3px; }
+    .price { font-size: 28px; font-weight: 800; color: #0b1220; margin: 6px 0 12px; }
+    .features { list-style: none; padding: 0; margin: 12px 0 18px; }
+    .features li { display: flex; gap: 10px; align-items: flex-start; margin: 8px 0; color: #374151; }
+    .features li:before { content: '✓'; color: #16a34a; font-weight: 800; }
+    .note { font-size: 13px; color: var(--muted); margin-top: 10px; }
+
+    /* Testimonials */
+    .testimonial { background: #fff; border: 1px solid rgba(0,0,0,0.06); border-radius: 16px; padding: 18px; box-shadow: var(--shadow); }
+    .quote { font-weight: 600; color: #0b1220; }
+    .meta { font-size: 13px; color: var(--muted); }
+
+    /* Social proof placeholders */
+    .placeholder { border: 2px dashed rgba(0,0,0,0.15); border-radius: 14px; padding: 24px; text-align: center; color: var(--muted); background: #fafcff; }
+
+    /* Footer */
+    footer { padding: 40px 0; color: #6b7280; border-top: 1px solid rgba(0,0,0,0.06); background: #fff; }
+    footer .row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    footer a { color: var(--muted); }
+
+    /* Fade-in on scroll */
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Accessibility focus visible for links */
+    a:focus-visible { outline: none; box-shadow: var(--focus); border-radius: 8px; }
+
+    /* Responsive tweaks */
+    @media (max-width: 1000px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-art { height: 420px; }
+      .nav-links { display: none; }
+      .hamburger { display: inline-block; }
+      .mobile-menu.open { display: flex; }
+    }
+  </style>
+</head>
+<body>
+  <header role="banner" aria-label="Main Navigation">
+    <div class="container">
+      <div class="nav">
+        <a class="brand" href="#home" aria-label="Built Advertising LLC">
+          <div class="logo" aria-hidden="true">BA</div>
+          <div class="brand-text">
+            <span class="brand-name">Built Advertising LLC</span>
+            <span class="brand-tag">Turning Clicks into Closings</span>
+          </div>
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="#home">Home</a>
+          <a href="#how">How It Works</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#results">Results</a>
+          <a class="btn btn-primary" href="#book">Book Demo</a>
+        </nav>
+        <button class="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+      <nav id="mobileMenu" class="mobile-menu" aria-label="Mobile">
+        <a href="#home">Home</a>
+        <a href="#how">How It Works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#results">Results</a>
+        <a class="btn btn-primary" href="#book">Book Demo</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section id="home" class="hero" aria-labelledby="hero-title">
+    <div class="container" style="display:grid; grid-template-columns: 1.1fr 0.9fr; gap:40px; align-items:center;">
+      <div>
+        <h1 id="hero-title">Never Miss a Lead Again. Automatic Follow-Up That Books Appointments While You Sleep.</h1>
+        <p class="lead">Real estate agents are losing deals to competitors who simply respond faster. We make sure you're always first—automatically.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#book" aria-label="Book a free demo">Book a Free Demo</a>
+          <a class="btn btn-secondary" href="#how" aria-label="See how it works">See How It Works</a>
+        </div>
+      </div>
+      <div class="hero-art" role="img" aria-label="AI assistant animation">
+        <spline-viewer url="https://prod.spline.design/4cHQr84zOGAHOehh/scene.splinecode"></spline-viewer>
+        <div class="gradient-overlay" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="section-soft" aria-labelledby="problem-title">
+    <div class="container reveal">
+      <h2 id="problem-title">We Get It</h2>
+      <div class="grid cols-3" style="align-items:center;">
+        <div class="card" style="grid-column: span 2;">
+          <p>You're spending thousands on ads, but leads are going to whoever texts back first. By the time you finish a showing or return a call, they've already booked with someone else. You're great at closing deals—but only if you can get leads on the phone.</p>
+        </div>
+        <div class="card" aria-hidden="true">
+          <div class="icon" style="margin-bottom:10px;">📱</div>
+          <div class="placeholder">Missed call / missed opportunity</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GUIDE -->
+  <section aria-labelledby="guide-title">
+    <div class="container reveal">
+      <h2 id="guide-title">That's Where We Come In</h2>
+      <p>We're Built Advertising—Meta advertising experts who specialize in real estate lead generation. But we don't just generate leads. We've partnered with cutting-edge AI technology to make sure every single lead gets followed up with instantly, so you never lose another deal to a faster competitor.</p>
+      <div class="grid cols-4" style="margin-top: 18px;">
+        <div class="card"><div class="icon" aria-hidden="true">📣</div><h3>Meta Advertising Specialists</h3><p>High-converting Facebook campaigns tailored to your market.</p></div>
+        <div class="card"><div class="icon" aria-hidden="true">🤖</div><h3>AI-Powered Follow-Up</h3><p>Instant SMS and email responses the moment a lead opts in.</p></div>
+        <div class="card"><div class="icon" aria-hidden="true">💳</div><h3>Performance-Based Pricing</h3><p>Aligned with your success—not just monthly retainers.</p></div>
+        <div class="card"><div class="icon" aria-hidden="true">📈</div><h3>Real Results</h3><p>Transparent reporting and clear ROI you can trust.</p></div>
+      </div>
+
+      <!-- Social proof placeholders -->
+      <div class="grid cols-3" style="margin-top: 22px;">
+        <div class="placeholder" aria-label="Screenshot placeholder">Screenshot of ad performance metrics</div>
+        <div class="placeholder" aria-label="Screenshot placeholder">Screenshot of AI booking conversation</div>
+        <div class="placeholder" aria-label="Screenshot placeholder">Screenshot of ad performance metrics</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAN / HOW IT WORKS -->
+  <section id="how" class="section-soft" aria-labelledby="plan-title">
+    <div class="container reveal">
+      <h2 id="plan-title">How It Works: From Click to Closing in 3 Simple Steps</h2>
+      <div class="steps" aria-live="polite">
+        <!-- Step 1 -->
+        <div class="step">
+          <div class="icon pulse" aria-hidden="true">🧲</div>
+          <h3>1) Your Ads Generate Qualified Leads</h3>
+          <p>We create and manage high-converting Facebook ads that bring in motivated buyers and sellers in your market.</p>
+          <div class="bubble-seq" aria-hidden="true">
+            <div class="bubble" style="left:0; top: 8px;">Facebook Ad</div>
+            <div class="bubble ai" style="left:120px; top: 8px;">Form Submitted</div>
+          </div>
+          <svg class="flow-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M8 4l8 8-8 8" stroke="#0A63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <!-- Step 2 -->
+        <div class="step">
+          <div class="icon" aria-hidden="true">💬</div>
+          <h3>2) AI Follows Up Instantly</h3>
+          <p>The moment a lead submits their info, our AI system responds via text and email—no delays, no missed opportunities.</p>
+          <div class="bubble-seq">
+            <div class="bubble ai" style="left:0; top: 8px;">Hi! Thanks for reaching out 👋</div>
+            <div class="bubble" style="left:180px; top: 38px;">Tomorrow at 2pm?</div>
+            <div class="bubble ai" style="left:40px; top: 68px;">Booked. See you then!</div>
+          </div>
+          <svg class="flow-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M8 4l8 8-8 8" stroke="#0A63FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <!-- Step 3 -->
+        <div class="step">
+          <div class="icon" aria-hidden="true">📅</div>
+          <h3>3) Lead Books Directly on Your Calendar</h3>
+          <p>The AI handles the back-and-forth, finds a time that works, and books the appointment directly on your calendar. You get notified, and you show up to close.</p>
+          <div class="calendar-anim">
+            <div class="calendar-box">Appointment: Thu 2:00 PM</div>
+            <div class="tick" aria-hidden="true">✓</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 22px;">
+        <a class="btn btn-primary" href="#book">See It in Action — Book a Free Demo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" aria-labelledby="pricing-title">
+    <div class="container reveal">
+      <h2 id="pricing-title">Simple, Performance-Based Pricing</h2>
+      <p>We only win when you win. Our pricing is designed around your success, not just monthly fees.</p>
+      <div class="pricing" style="margin-top: 18px;">
+        <!-- Card 1 -->
+        <div class="price-card">
+          <h3>Marketing Campaign Management</h3>
+          <div class="price">$250/month + $800 per closed deal</div>
+          <ul class="features">
+            <li>Facebook/Meta lead generation campaigns</li>
+            <li>Daily ad optimization & monitoring</li>
+            <li>CRM access included (GoHighLevel)</li>
+            <li>One-time orientation session</li>
+            <li>Monthly performance reports</li>
+          </ul>
+          <a href="#book" class="btn btn-secondary" aria-label="Get started with Marketing Campaign Management">Get Started</a>
+          <div class="note">Perfect for agents who want professional ad management</div>
+        </div>
+        <!-- Card 2 -->
+        <div class="price-card">
+          <h3>AI Follow-Up System</h3>
+          <div class="price">$500 setup + $150/month + $400 per closed deal</div>
+          <ul class="features">
+            <li>AI-powered instant lead follow-up (SMS & email)</li>
+            <li>Automatic appointment booking</li>
+            <li>Calendar integration & notifications</li>
+            <li>CRM access included</li>
+            <li>One-time orientation session</li>
+          </ul>
+          <a href="#book" class="btn btn-secondary" aria-label="Get started with AI Follow-Up System">Get Started</a>
+          <div class="note">For agents running their own ads who need better follow-up</div>
+        </div>
+        <!-- Card 3 -->
+        <div class="price-card">
+          <span class="badge" aria-label="Recommended plan">RECOMMENDED</span>
+          <h3>Complete System</h3>
+          <div class="price">$500 setup + $400/month + $800 per closed deal</div>
+          <ul class="features">
+            <li>Everything combined: Ads + AI + CRM</li>
+            <li>Facebook/Meta lead generation campaigns</li>
+            <li>AI instant follow-up & appointment booking</li>
+            <li>Daily optimization & monitoring</li>
+            <li>Calendar integration & notifications</li>
+            <li>Monthly performance reports</li>
+            <li>One-time orientation session</li>
+          </ul>
+          <a href="#book" class="btn btn-primary" aria-label="Book your demo for the Complete System">Book Your Demo</a>
+          <div class="note">The full solution: from click to booked appointment</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 18px;">
+        <strong>CRM Support Notice:</strong>
+        <p>CRM access is included with all packages. We provide one orientation session and ongoing support for campaign and AI questions. Closed deals are tracked through the CRM with monthly performance review calls. For dedicated CRM platform training or technical support, GoHighLevel offers their own support plans starting at $97/month.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS & TESTIMONIALS -->
+  <section id="results" class="section-soft" aria-labelledby="results-title">
+    <div class="container reveal">
+      <h2 id="results-title">Real Results from Real Agents</h2>
+      <div class="grid cols-3" style="margin-top: 14px;">
+        <div class="testimonial"><div class="quote">"Client testimonial placeholder - will be replaced with actual review"</div><div class="meta">Agent Name — Location</div><div class="meta">Metric: Booked 12 appointments in first month</div></div>
+        <div class="testimonial"><div class="quote">"Client testimonial placeholder - will be replaced with actual review"</div><div class="meta">Agent Name — Location</div></div>
+        <div class="placeholder">Screenshot of ad performance metrics - will be inserted</div>
+        <div class="placeholder">Screenshot of AI booking conversation - will be inserted</div>
+        <div class="placeholder">Screenshot of ad performance metrics - will be inserted</div>
+        <div class="placeholder">Screenshot of AI booking conversation - will be inserted</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AVOID FAILURE -->
+  <section aria-labelledby="stakes-title">
+    <div class="container reveal">
+      <h2 id="stakes-title">Don't Let Another Lead Slip Away</h2>
+      <div class="grid cols-3" style="align-items: center;">
+        <div class="card" style="grid-column: span 2;">
+          <p>Every day you wait is another day competitors with faster follow-up are booking YOUR leads. The longer you take to respond, the colder leads get—and the more money you leave on the table.</p>
+        </div>
+        <div class="card" aria-hidden="true">
+          <div class="icon" style="margin-bottom:10px;">⏱️</div>
+          <div class="placeholder">Leads going cold over time</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUCCESS VISION -->
+  <section class="section-soft" aria-labelledby="success-title">
+    <div class="container reveal">
+      <h2 id="success-title">Imagine This Instead...</h2>
+      <div class="grid cols-3">
+        <div class="card"><h3>More Booked Appointments</h3><p>Fill your calendar with qualified prospects every month—without lifting a finger.</p></div>
+        <div class="card"><h3>Respond in Seconds</h3><p>AI replies instantly so you’re always first to the conversation.</p></div>
+        <div class="card"><h3>Predictable Pipeline</h3><p>Consistent flow of ready-to-close clients you can count on.</p></div>
+        <div class="card"><h3>Focus on Closings</h3><p>Spend more time on showings and negotiations—not chasing leads.</p></div>
+        <div class="card"><h3>Calendar on Autopilot</h3><p>Automatic booking with reminders and notifications built-in.</p></div>
+        <div class="card"><h3>Transparent Reporting</h3><p>See exactly what’s working with clean, easy-to-read metrics.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA WITH CALENDAR -->
+  <section id="book" aria-labelledby="final-cta-title">
+    <div class="container reveal" style="text-align:center;">
+      <h2 id="final-cta-title">Ready to Never Miss Another Lead?</h2>
+      <p>Book a free demo and see exactly how our system can transform your lead generation and follow-up.</p>
+      <div style="margin: 18px 0; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+        <a class="btn btn-primary" href="#calendar" aria-label="Book your free demo">Book Your Free Demo</a>
+        <a class="btn btn-secondary" href="#pricing">See Pricing</a>
+      </div>
+      <p class="note" style="margin-bottom: 18px;">No obligation. No pressure. Just a clear look at how we can help you close more deals.</p>
+
+      <!-- Calendar Embed Area (GoHighLevel compatible) -->
+      <div id="calendar" class="card" style="padding: 0; overflow: hidden;">
+        <div class="placeholder" style="margin:0; border:none;">
+          Calendar booking widget embed area — paste your GoHighLevel calendar embed code here.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="row">
+        <div class="brand" aria-label="Built Advertising LLC">
+          <div class="logo" aria-hidden="true">BA</div>
+          <div class="brand-text">
+            <span class="brand-name">Built Advertising LLC</span>
+            <span class="brand-tag">Turning Clicks into Closings</span>
+          </div>
+        </div>
+        <div style="display:flex; gap:18px; flex-wrap:wrap; align-items:center;">
+          <a href="#" aria-label="Privacy Policy">Privacy Policy</a>
+          <a href="#" aria-label="Terms of Service">Terms of Service</a>
+          <span>© 2024 Built Advertising LLC</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    (function(){
+      const btn = document.querySelector('.hamburger');
+      const menu = document.getElementById('mobileMenu');
+      if (!btn || !menu) return;
+      btn.addEventListener('click', () => {
+        const open = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(open));
+      });
+    })();
+
+    // Intersection Observer for reveals
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      })
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Animated sequences in How It Works
+    function animateSteps() {
+      // Step 1 bubbles
+      const s1 = document.querySelector('#how .step:nth-child(1) .bubble-seq');
+      if (s1) {
+        const b1 = s1.children[0];
+        const b2 = s1.children[1];
+        setTimeout(() => b1.classList.add('show'), 200);
+        setTimeout(() => b2.classList.add('show'), 700);
+      }
+      // Step 2 bubbles
+      const s2 = document.querySelector('#how .step:nth-child(2) .bubble-seq');
+      if (s2) {
+        const c1 = s2.children[0];
+        const c2 = s2.children[1];
+        const c3 = s2.children[2];
+        setTimeout(() => c1.classList.add('show'), 200);
+        setTimeout(() => c2.classList.add('show'), 900);
+        setTimeout(() => c3.classList.add('show'), 1500);
+      }
+      // Step 3 tick
+      const tick = document.querySelector('#how .tick');
+      setTimeout(() => tick && tick.classList.add('show'), 1900);
+    }
+
+    // Re-run animation when section enters view
+    const how = document.getElementById('how');
+    if (how) {
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            // Reset state
+            document.querySelectorAll('#how .bubble').forEach(b => b.classList.remove('show'));
+            const t = document.querySelector('#how .tick');
+            if (t) t.classList.remove('show');
+            animateSteps();
+          }
+        })
+      }, { threshold: 0.2 });
+      obs.observe(how);
+    }
+
+    // Accessibility: close mobile menu on link click
+    document.querySelectorAll('#mobileMenu a').forEach(a => {
+      a.addEventListener('click', () => {
+        const menu = document.getElementById('mobileMenu');
+        if (menu) menu.classList.remove('open');
+      });
+    });
+  </script>
+</body>
 </html>
